@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>⚓ KEMA BOTIRISH</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#010c18;--bg2:#061525;--bg3:#0a1e35;
+  --cy:#00e5ff;--cy2:#00b8d4;--gold:#ffc400;
+  --red:#ff1744;--grn:#00e676;--pur:#7c4dff;
+  --txt:#9ecae8;--txt2:#4a7a98;
+  --brd:rgba(0,229,255,.18);--brd2:rgba(0,229,255,.4);
+  --card:rgba(6,21,37,.95);
+  --cell:rgba(0,229,255,.04);
+}
+body.light{
+  --bg:#e8f4ff;--bg2:#cce4f6;--bg3:#b8d8f0;
+  --cy:#005580;--cy2:#003d5c;--gold:#a05000;
+  --red:#c0001a;--grn:#005518;
+  --txt:#061525;--txt2:#3a6a88;
+  --brd:rgba(0,60,100,.22);--brd2:rgba(0,60,100,.45);
+  --card:rgba(200,228,246,.97);
+  --cell:rgba(0,60,100,.05);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{background:var(--bg);color:var(--txt);font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden;user-select:none;transition:background .3s,color .3s;}
+/* SEA BG */
+.sea{position:fixed;inset:0;z-index:0;background:linear-gradient(180deg,var(--bg),var(--bg2));overflow:hidden;pointer-events:none;}
+.sea::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 10% 90%,rgba(0,50,100,.35),transparent 55%),radial-gradient(ellipse 50% 60% at 90% 10%,rgba(0,20,60,.25),transparent 55%);}
+.bub{position:absolute;border-radius:50%;border:1px solid rgba(0,229,255,.1);background:rgba(0,229,255,.03);animation:rise linear infinite;}
+@keyframes rise{0%{transform:translateY(100vh);opacity:0;}15%{opacity:1;}100%{transform:translateY(-80px);opacity:0;}}
+/* SCREENS */
+.scr{position:fixed;inset:0;z-index:10;display:none;flex-direction:column;align-items:center;justify-content:center;padding:14px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.scr.on{display:flex;}
+/* TEXT */
+.logo{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(24px,7vw,46px);letter-spacing:2px;text-align:center;background:linear-gradient(135deg,var(--cy),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:glow 3s ease-in-out infinite;}
+@keyframes glow{0%,100%{filter:drop-shadow(0 0 8px rgba(0,229,255,.3));}50%{filter:drop-shadow(0 0 22px rgba(0,229,255,.6));}}
+.sub{font-family:'Orbitron',monospace;font-size:clamp(8px,2.5vw,12px);letter-spacing:5px;color:var(--txt2);text-align:center;margin-top:3px;}
+.stitle{font-family:'Orbitron',monospace;font-size:clamp(12px,3.8vw,17px);color:var(--cy);letter-spacing:2px;text-align:center;margin-bottom:14px;font-weight:700;}
+.stitle em{color:var(--gold);font-style:normal;}
+/* BUTTONS */
+.btn{display:block;width:100%;max-width:320px;padding:13px 18px;margin:7px auto;border:1px solid var(--brd);border-radius:8px;background:var(--cell);color:var(--cy);font-family:'Orbitron',monospace;font-size:clamp(10px,3vw,13px);font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden;}
+.btn:active{transform:scale(.97);}
+.btn:hover{border-color:var(--cy);box-shadow:0 0 16px rgba(0,229,255,.18);}
+.btn.gold{color:var(--gold);border-color:rgba(255,196,0,.28);}
+.btn.gold:hover{border-color:var(--gold);}
+.btn.red{color:var(--red);border-color:rgba(255,23,68,.28);}
+.btn.red:hover{border-color:var(--red);}
+.btn.grn{color:var(--grn);border-color:rgba(0,230,118,.28);}
+.btn.grn:hover{border-color:var(--grn);box-shadow:0 0 16px rgba(0,230,118,.18);}
+.btn.sm{max-width:150px;padding:9px 12px;font-size:clamp(9px,2.7vw,11px);}
+.btn:disabled{opacity:.3;pointer-events:none;}
+.btn-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;width:100%;}
+/* MODE CARDS */
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:340px;}
+.mcard{background:var(--cell);border:1px solid var(--brd);border-radius:10px;padding:16px 10px;text-align:center;cursor:pointer;transition:all .2s;}
+.mcard:hover,.mcard:active{border-color:var(--cy);box-shadow:0 0 16px rgba(0,229,255,.15);transform:translateY(-2px);}
+.mcard .ico{font-size:26px;display:block;margin-bottom:7px;}
+.mcard .lbl{font-family:'Orbitron',monospace;font-size:9.5px;color:var(--cy);letter-spacing:1px;font-weight:700;}
+.mcard .dsc{font-size:11px;color:var(--txt2);margin-top:3px;}
+/* INFO */
+.ibox{background:var(--cell);border:1px solid var(--brd);border-radius:8px;padding:12px 14px;font-size:12.5px;color:var(--txt);line-height:1.65;margin:8px 0;}
+.ibox b{color:var(--cy);}
+/* ====== CONNECTION CODE UI ====== */
+.code-display{display:flex;gap:8px;justify-content:center;margin:16px 0;}
+.code-char{width:52px;height:62px;border-radius:8px;border:2px solid var(--brd2);background:var(--bg2);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:26px;font-weight:900;color:var(--cy);letter-spacing:0;animation:pop .25s ease-out;}
+@keyframes pop{0%{transform:scale(.85);opacity:0;}100%{transform:scale(1);opacity:1;}}
+@media(max-width:340px){.code-char{width:44px;height:54px;font-size:22px;}}
+.code-inputs{display:flex;gap:8px;justify-content:center;margin:16px 0;}
+.ci{width:52px;height:62px;border-radius:8px;border:2px solid var(--brd);background:var(--bg3);color:var(--cy);font-family:'Orbitron',monospace;font-size:24px;font-weight:900;text-align:center;padding:0;-webkit-appearance:none;transition:border-color .18s;}
+.ci:focus{outline:none;border-color:var(--cy);box-shadow:0 0 12px rgba(0,229,255,.2);}
+.ci.filled{border-color:var(--cy2);}
+@media(max-width:340px){.ci{width:44px;height:54px;font-size:20px;}}
+.conn-status{padding:10px 14px;text-align:center;font-family:'Orbitron',monospace;font-size:11px;border-radius:6px;border:1px solid var(--brd);background:var(--cell);margin:8px 0;}
+.conn-status.ok{color:var(--grn);border-color:rgba(0,230,118,.3);}
+.conn-status.err{color:var(--red);border-color:rgba(255,23,68,.3);}
+.conn-status.wait{color:var(--gold);border-color:rgba(255,196,0,.3);animation:blink 1.2s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.35;}}
+/* ====== PROFILE ====== */
+.profile-btn{position:fixed;top:10px;left:12px;z-index:200;background:var(--cell);border:1px solid var(--brd);border-radius:20px;padding:5px 12px;font-size:13px;cursor:pointer;color:var(--txt);font-family:'Rajdhani',sans-serif;font-weight:700;display:flex;align-items:center;gap:6px;transition:all .2s;}
+.profile-btn:hover{border-color:var(--cy);}
+.theme-btn{position:fixed;top:10px;right:12px;z-index:200;background:var(--cell);border:1px solid var(--brd);border-radius:20px;padding:5px 12px;font-size:12px;cursor:pointer;color:var(--txt);font-family:'Rajdhani',sans-serif;font-weight:700;transition:all .2s;}
+.theme-btn:hover{border-color:var(--cy);}
+.avatar-grid{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:10px 0;}
+.av-opt{width:44px;height:44px;border-radius:8px;border:2px solid var(--brd);background:var(--cell);display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;transition:all .2s;}
+.av-opt:hover,.av-opt.sel{border-color:var(--cy);background:var(--bg3);}
+.name-input{width:100%;max-width:280px;padding:10px 14px;border:1px solid var(--brd);border-radius:8px;background:var(--bg2);color:var(--cy);font-family:'Orbitron',monospace;font-size:16px;font-weight:700;letter-spacing:2px;text-align:center;display:block;margin:10px auto;}
+.name-input:focus{outline:none;border-color:var(--cy);}
+.stat-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0;}
+.stat-card{background:var(--cell);border:1px solid var(--brd);border-radius:8px;padding:12px 16px;text-align:center;min-width:80px;}
+.stat-val{font-family:'Orbitron',monospace;font-size:22px;font-weight:700;color:var(--cy);}
+.stat-lbl{font-size:10px;color:var(--txt2);margin-top:2px;font-family:'Orbitron',monospace;letter-spacing:1px;}
+/* ====== PLACEMENT ====== */
+#scr-place{justify-content:flex-start;padding:10px 10px 90px;}
+.ship-list{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-bottom:10px;}
+.sitem{padding:5px 9px;border:1px solid var(--brd);border-radius:6px;font-size:11.5px;cursor:pointer;transition:all .18s;background:var(--cell);white-space:nowrap;}
+.sitem.sel{border-color:var(--cy);background:rgba(0,229,255,.15);color:var(--cy);font-weight:700;}
+.sitem.placed{opacity:.3;pointer-events:none;text-decoration:line-through;}
+/* GRID */
+.grid-outer{display:inline-block;}
+.gcolrow{display:flex;margin-left:20px;}
+.gcolrow span{display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--txt2);font-family:'Orbitron',monospace;}
+.growcol{display:flex;flex-direction:column;width:20px;}
+.growcol span{width:20px;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--txt2);font-family:'Orbitron',monospace;}
+.grid{display:grid;border:1px solid var(--brd);}
+.cell{border:1px solid rgba(0,229,255,.1);background:var(--cell);position:relative;overflow:hidden;transition:background .12s;}
+.cell.ship{background:rgba(0,229,255,.18);border-color:rgba(0,229,255,.5);}
+.cell.ship::after{content:'';position:absolute;inset:2px;background:linear-gradient(135deg,rgba(0,229,255,.22),transparent);border-radius:2px;}
+.cell.prev{background:rgba(0,229,255,.18);border-color:rgba(0,229,255,.6);}
+.cell.prev-bad{background:rgba(255,23,68,.12);border-color:rgba(255,23,68,.45);}
+.cell.hit{background:rgba(255,23,68,.25);}
+.cell.hit::after{content:'💥';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;animation:boom .3s ease-out;}
+.cell.miss{background:rgba(0,80,150,.13);}
+.cell.miss::after{content:'💧';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;animation:splash .25s ease-out;}
+.cell.sunk{background:rgba(255,40,0,.12);}
+.cell.sunk::after{content:'🔥';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+@keyframes boom{0%{transform:scale(2.5);opacity:0;}100%{transform:scale(1);opacity:1;}}
+@keyframes splash{0%{transform:scale(2);opacity:0;}100%{transform:scale(1);opacity:1;}}
+/* BATTLE STATUS */
+.sbar{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--cell);border:1px solid var(--brd);border-radius:8px;margin-bottom:10px;}
+.sbar .tl{font-family:'Orbitron',monospace;font-size:10px;color:var(--txt2);letter-spacing:1px;}
+.sbar .tn{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--cy);}
+.hprow{display:flex;gap:4px;}
+.hpdot{width:10px;height:10px;border-radius:50%;background:var(--grn);border:1px solid rgba(0,230,118,.4);transition:all .3s;}
+.hpdot.dead{background:rgba(100,100,100,.2);border-color:rgba(100,100,100,.2);}
+.btabs{display:flex;gap:8px;margin-bottom:8px;}
+.btab{flex:1;padding:8px 4px;text-align:center;border:1px solid var(--brd);border-radius:6px;font-family:'Orbitron',monospace;font-size:10px;cursor:pointer;transition:all .18s;color:var(--txt2);}
+.btab.on{border-color:var(--cy);color:var(--cy);background:rgba(0,229,255,.08);}
+/* TRANSFER */
+#scr-transfer{background:rgba(1,8,18,.97);}
+body.light #scr-transfer{background:rgba(210,232,248,.97);}
+.tbox{text-align:center;padding:28px 20px;max-width:320px;}
+.tico{font-size:62px;animation:bob 1.5s ease-in-out infinite alternate;}
+@keyframes bob{0%{transform:translateY(0);}100%{transform:translateY(-10px);}}
+/* GAMEOVER */
+.winner{font-family:'Orbitron',monospace;font-size:clamp(15px,5vw,26px);font-weight:900;text-align:center;margin:14px 0;animation:glow 2s ease-in-out infinite;}
+.winner.p1{background:linear-gradient(135deg,var(--cy),var(--grn));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.winner.p2{background:linear-gradient(135deg,var(--gold),var(--red));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+/* TOAST */
+.toast{position:fixed;bottom:86px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--cy);border-radius:8px;padding:8px 16px;font-family:'Orbitron',monospace;font-size:10.5px;color:var(--cy);z-index:9999;pointer-events:none;white-space:nowrap;animation:tin .22s ease-out,tout .3s ease-in 2.1s forwards;}
+@keyframes tin{from{opacity:0;transform:translateX(-50%) translateY(8px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+@keyframes tout{to{opacity:0;}}
+/* FIXED PLACE ACTION */
+#place-actions{position:fixed;bottom:0;left:0;right:0;z-index:50;padding:10px 16px 14px;display:none;background:linear-gradient(transparent,var(--bg) 50%);}
+#place-actions .btn{pointer-events:auto;}
+/* WAITING */
+#waiting{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;}
+#waiting.on{display:flex;}
+.spin{width:38px;height:38px;border:3px solid var(--brd);border-top-color:var(--cy);border-radius:50%;animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+#wait-msg{font-family:'Orbitron',monospace;font-size:12px;color:var(--cy);}
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:var(--cy2);border-radius:2px;}
+</style>
+</head>
+<body>
+<div class="sea" id="sea"></div>
+<button class="profile-btn" id="prof-btn" onclick="go('scr-profile')"><span id="prof-av">⚓</span><span id="prof-nm">PROFIL</span></button>
+<button class="theme-btn" id="theme-btn" onclick="toggleTheme()">☀️ LIGHT</button>
+<div id="waiting"><div class="spin"></div><div id="wait-msg">KUTILMOQDA...</div></div>
+
+<!-- ═══════ MENU ═══════ -->
+<div class="scr on" id="scr-menu">
+  <div style="font-size:clamp(48px,13vw,76px);animation:bob 3s ease-in-out infinite;">⚓</div>
+  <div class="logo">KEMA BOTIRISH</div>
+  <div class="sub">DENGIZ JANGI · NAVAL COMBAT</div>
+  <div style="height:22px;"></div>
+  <button class="btn gold" onclick="go('scr-mode')">⚔ O'YIN BOSHLASH</button>
+  <button class="btn" onclick="go('scr-rules')">📖 QOIDALAR</button>
+</div>
+
+<!-- ═══════ PROFILE ═══════ -->
+<div class="scr" id="scr-profile" style="justify-content:flex-start;padding-top:64px;">
+  <div class="stitle">👤 MENING <em>PROFILIM</em></div>
+  <div style="max-width:340px;width:100%;padding-bottom:20px;">
+    <div style="text-align:center;margin-bottom:10px;">
+      <div style="font-size:60px;" id="pv-avatar">⚓</div>
+    </div>
+    <div class="avatar-grid" id="av-grid"></div>
+    <div class="ibox" style="text-align:center;">
+      <div style="font-size:11px;color:var(--txt2);margin-bottom:6px;font-family:'Orbitron',monospace;letter-spacing:1px;">ISMINGIZ</div>
+      <input class="name-input" id="name-input" maxlength="12" placeholder="DENGIZCHI" autocomplete="off">
+    </div>
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-val" id="st-wins">0</div><div class="stat-lbl">G'ALABA</div></div>
+      <div class="stat-card"><div class="stat-val" id="st-games">0</div><div class="stat-lbl">O'YIN</div></div>
+      <div class="stat-card"><div class="stat-val" id="st-shots">0</div><div class="stat-lbl">OTISH</div></div>
+    </div>
+    <button class="btn grn" onclick="saveProfile()">💾 SAQLASH</button>
+    <button class="btn sm red" onclick="go('scr-menu')" style="margin-top:4px;">← ORQAGA</button>
+  </div>
+</div>
+
+<!-- ═══════ MODE ═══════ -->
+<div class="scr" id="scr-mode">
+  <div class="stitle">O'YIN <em>REJIMI</em></div>
+  <div class="mgrid">
+    <div class="mcard" onclick="startGame('bot')"><span class="ico">🤖</span><div class="lbl">BOT BILAN</div><div class="dsc">AI ga qarshi</div></div>
+    <div class="mcard" onclick="startGame('local')"><span class="ico">🤝</span><div class="lbl">1 TELEFON</div><div class="dsc">2 do'st, navbat</div></div>
+    <div class="mcard" onclick="startGame('hotspot')"><span class="ico">📡</span><div class="lbl">HOTSPOT</div><div class="dsc">Bir xil WiFi</div></div>
+    <div class="mcard" onclick="startGame('online')"><span class="ico">🌐</span><div class="lbl">ONLINE</div><div class="dsc">Internet orqali</div></div>
+  </div>
+  <div style="height:12px;"></div>
+  <button class="btn sm red" onclick="go('scr-menu')">← ORQAGA</button>
+</div>
+
+<!-- ═══════ RULES ═══════ -->
+<div class="scr" id="scr-rules" style="justify-content:flex-start;padding-top:60px;">
+  <div class="stitle">📖 QOIDALAR</div>
+  <div style="max-width:370px;width:100%;padding-bottom:16px;">
+    <div class="ibox"><b>Kemalar:</b> ✈ Avianoschi(5) · 🚢 Jangovar(4) · ⚓ Kreser(3) · 🤿 Suv osti(3) · 🛥 Qorovul(2)</div>
+    <div class="ibox"><b>O'yin:</b> Kemalarni joylashtiring → navbatma-navbat oting → 💥Tegdi=yana oting · 💧O'tdi=navbat o'tadi → Barcha kemalarni cho'ktirgan g'alaba!</div>
+    <div class="ibox"><b>📡 Hotspot:</b> Bir telefon hotspot yoqadi → Do'st unga ulanadi → Ikkala telefon ilovani ochadi → HOST kodni ko'rsatadi → GUEST kodni kiritadi → O'yin!</div>
+    <div class="ibox"><b>🌐 Online:</b> Internet/WiFi orqali → HOST kod oladi → GUEST kodni kiritadi → Ulandi!</div>
+  </div>
+  <button class="btn sm red" onclick="go('scr-menu')">← ORQAGA</button>
+</div>
+
+<!-- ═══════ HOTSPOT ═══════ -->
+<div class="scr" id="scr-hotspot" style="justify-content:flex-start;padding-top:60px;">
+  <div class="stitle">📡 HOTSPOT <em>ULANISH</em></div>
+  <div style="max-width:360px;width:100%;padding-bottom:20px;">
+    <div id="hs-role-select">
+      <div class="ibox" style="text-align:center;"><b>Siz kim sifatida o'ynaysiz?</b><br><span style="color:var(--txt2);font-size:12px;">Hotspot egasi HOST tanlaydi</span></div>
+      <div class="btn-row" style="margin-top:12px;">
+        <button class="btn gold" onclick="hsChooseRole(true)" style="max-width:150px;">👑 HOST</button>
+        <button class="btn" onclick="hsChooseRole(false)" style="max-width:150px;">🙋 GUEST</button>
+      </div>
+      <button class="btn sm red" onclick="cancelNet()" style="margin-top:10px;margin-left:auto;margin-right:auto;">← BEKOR</button>
+    </div>
+    <!-- HOST VIEW -->
+    <div id="hs-host" style="display:none;">
+      <div class="ibox" style="text-align:center;">Ushbu kodni do'stingizga bering:<br><small style="color:var(--txt2);">(Do'st sizning hotspotingizga ulangan bo'lishi kerak)</small></div>
+      <div class="code-display" id="hs-code-display"></div>
+      <div id="hs-host-status" class="conn-status wait">⏳ Do'st ulanishi kutilmoqda...</div>
+    </div>
+    <!-- GUEST VIEW -->
+    <div id="hs-guest" style="display:none;">
+      <div class="ibox" style="text-align:center;">Host berilgan <b>5 ta belgili kodni</b> kiriting:</div>
+      <div class="code-inputs" id="hs-inputs"></div>
+      <button class="btn grn" onclick="hsGuestConnect()" style="margin-top:4px;">🔗 ULASH</button>
+      <div id="hs-guest-status" class="conn-status" style="display:none;"></div>
+      <button class="btn sm red" onclick="cancelNet()" style="margin-top:8px;margin-left:auto;margin-right:auto;">← BEKOR</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ ONLINE ═══════ -->
+<div class="scr" id="scr-online" style="justify-content:flex-start;padding-top:60px;">
+  <div class="stitle">🌐 ONLINE <em>ULANISH</em></div>
+  <div style="max-width:360px;width:100%;padding-bottom:20px;">
+    <div id="ol-role-select">
+      <div class="ibox" style="text-align:center;"><b>Siz kim sifatida o'ynaysiz?</b></div>
+      <div class="btn-row" style="margin-top:12px;">
+        <button class="btn gold" onclick="olChooseRole(true)" style="max-width:150px;">👑 HOST</button>
+        <button class="btn" onclick="olChooseRole(false)" style="max-width:150px;">🙋 GUEST</button>
+      </div>
+      <button class="btn sm red" onclick="cancelNet()" style="margin-top:10px;margin-left:auto;margin-right:auto;">← BEKOR</button>
+    </div>
+    <!-- HOST VIEW -->
+    <div id="ol-host" style="display:none;">
+      <div class="ibox" style="text-align:center;">Ushbu kodni do'stingizga yuboring:</div>
+      <div class="code-display" id="ol-code-display"></div>
+      <div id="ol-host-status" class="conn-status wait">⏳ Do'st ulanishi kutilmoqda...</div>
+    </div>
+    <!-- GUEST VIEW -->
+    <div id="ol-guest" style="display:none;">
+      <div class="ibox" style="text-align:center;"><b>5 ta belgili kodni kiriting:</b></div>
+      <div class="code-inputs" id="ol-inputs"></div>
+      <button class="btn grn" onclick="olGuestConnect()" style="margin-top:4px;">🔗 ULASH</button>
+      <div id="ol-guest-status" class="conn-status" style="display:none;"></div>
+      <button class="btn sm red" onclick="cancelNet()" style="margin-top:8px;margin-left:auto;margin-right:auto;">← BEKOR</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ PLACEMENT ═══════ -->
+<div class="scr" id="scr-place">
+  <div class="stitle" id="place-title" style="margin-top:8px;">KEMALARNI <em>JOYLASHTIR</em></div>
+  <div class="ship-list" id="ship-list"></div>
+  <div class="btn-row" style="margin-bottom:10px;">
+    <button class="btn sm" id="orient-btn" onclick="toggleOrient()">↔ GORIZONTAL</button>
+    <button class="btn sm red" onclick="clearBoard()">🗑 TOZALA</button>
+    <button class="btn sm gold" onclick="autoPlaceUI()">🎲 AUTO</button>
+  </div>
+  <div id="place-grid-wrap"></div>
+  <div style="height:80px;"></div>
+</div>
+<div id="place-actions">
+  <button class="btn grn" id="done-btn" onclick="donePlacement()" disabled>✓ TAYYOR →</button>
+</div>
+
+<!-- ═══════ TRANSFER ═══════ -->
+<div class="scr" id="scr-transfer">
+  <div class="tbox">
+    <div class="tico" id="t-ico">📱</div>
+    <div class="stitle" id="t-title" style="margin-top:12px;">TELEFON BER</div>
+    <p id="t-msg" style="color:var(--txt2);font-size:14px;text-align:center;margin:12px 0 22px;line-height:1.65;"></p>
+    <button class="btn grn" id="t-btn">✓ TAYYOR</button>
+  </div>
+</div>
+
+<!-- ═══════ BATTLE ═══════ -->
+<div class="scr" id="scr-battle" style="justify-content:flex-start;padding:8px 8px 10px;">
+  <div style="max-width:420px;width:100%;margin:0 auto;">
+    <div class="sbar">
+      <div><div class="tl">NAVBAT</div><div class="tn" id="turn-name">SENING</div></div>
+      <div class="hprow" id="enemy-hp"></div>
+      <div style="text-align:right;"><div class="tl">KEMALAR</div><div style="font-size:11px;color:var(--txt2);" id="ships-left">5</div></div>
+    </div>
+    <div class="btabs">
+      <div class="btab on" id="btab-atk" onclick="showTab('atk')">⚔ HUJUM</div>
+      <div class="btab" id="btab-def" onclick="showTab('def')">🛡 MUDOFAA</div>
+    </div>
+    <div id="view-atk">
+      <div id="battle-grid-wrap" style="display:flex;justify-content:center;margin-bottom:6px;"></div>
+      <div id="b-msg" style="min-height:20px;text-align:center;font-family:'Orbitron',monospace;font-size:10px;color:var(--txt2);padding:4px;"></div>
+    </div>
+    <div id="view-def" style="display:none;">
+      <div id="defense-grid-wrap" style="display:flex;justify-content:center;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ GAMEOVER ═══════ -->
+<div class="scr" id="scr-gameover">
+  <div style="text-align:center;max-width:320px;">
+    <div style="font-size:70px;" id="go-ico">🏆</div>
+    <div class="winner p1" id="go-title">G'ALABA!</div>
+    <div id="go-stats" style="color:var(--txt2);font-family:'Orbitron',monospace;font-size:10px;margin:10px 0 20px;line-height:1.8;"></div>
+    <button class="btn gold" onclick="playAgain()">🔄 QAYTA O'YNASH</button>
+    <button class="btn" onclick="go('scr-menu')">🏠 BOSH MENU</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// CONSTANTS
+// ═══════════════════════════════════════════════
+const SHIPS=[
+  {id:'carrier',  name:'✈ Aviyanoschi', size:5},
+  {id:'battle',   name:'🚢 Jangovar',   size:4},
+  {id:'cruiser',  name:'⚓ Kreser',     size:3},
+  {id:'sub',      name:'🤿 Suv osti',   size:3},
+  {id:'patrol',   name:'🛥 Qorovul',    size:2},
+];
+const COLS=['A','B','C','D','E','F','G','H','I','J'];
+const ROWS=['1','2','3','4','5','6','7','8','9','10'];
+const AVATARS=['⚓','🚢','⚔️','🌊','🦈','🐬','🏴‍☠️','🎯','💣','🧭'];
+// Code chars: no I, O, 0, 1 to avoid confusion
+const CODE_CHARS='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+const CODE_LEN=5;
+const PEER_PFX='KB-';
+
+// ═══════════════════════════════════════════════
+// PROFILE
+// ═══════════════════════════════════════════════
+let profile={name:'DENGIZCHI',avatar:'⚓',wins:0,losses:0,games:0,totalShots:0};
+
+function loadProfile(){
+  try{const p=JSON.parse(localStorage.getItem('kb_profile'));if(p)profile={...profile,...p};}catch(e){}
+  applyProfile();
+}
+
+function applyProfile(){
+  document.getElementById('prof-av').textContent=profile.avatar;
+  document.getElementById('prof-nm').textContent=profile.name;
+  document.getElementById('pv-avatar').textContent=profile.avatar;
+  document.getElementById('name-input').value=profile.name;
+  document.getElementById('st-wins').textContent=profile.wins;
+  document.getElementById('st-games').textContent=profile.games;
+  document.getElementById('st-shots').textContent=profile.totalShots;
+  // Avatar grid
+  const ag=document.getElementById('av-grid');
+  ag.innerHTML='';
+  AVATARS.forEach(a=>{
+    const d=document.createElement('div');
+    d.className='av-opt'+(a===profile.avatar?' sel':'');
+    d.textContent=a;
+    d.onclick=()=>{profile.avatar=a;document.getElementById('pv-avatar').textContent=a;ag.querySelectorAll('.av-opt').forEach(x=>x.classList.remove('sel'));d.classList.add('sel');};
+    ag.appendChild(d);
+  });
+}
+
+function saveProfile(){
+  const nm=document.getElementById('name-input').value.trim().toUpperCase()||'DENGIZCHI';
+  profile.name=nm;
+  localStorage.setItem('kb_profile',JSON.stringify(profile));
+  applyProfile();
+  toast('✅ Profil saqlandi!');
+  go('scr-menu');
+}
+
+function saveStats(wonGame, shots){
+  profile.games++;
+  profile.totalShots+=shots;
+  if(wonGame) profile.wins++;
+  else profile.losses++;
+  localStorage.setItem('kb_profile',JSON.stringify(profile));
+  applyProfile();
+}
+
+// ═══════════════════════════════════════════════
+// THEME
+// ═══════════════════════════════════════════════
+let darkMode=true;
+function toggleTheme(){
+  darkMode=!darkMode;
+  document.body.classList.toggle('light',!darkMode);
+  document.getElementById('theme-btn').textContent=darkMode?'☀️ LIGHT':'🌙 DARK';
+}
+
+// ═══════════════════════════════════════════════
+// BUBBLES
+// ═══════════════════════════════════════════════
+(function(){const c=document.getElementById('sea');for(let i=0;i<14;i++){const b=document.createElement('div');b.className='bub';const s=Math.random()*26+8;b.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;animation-duration:${Math.random()*12+8}s;animation-delay:${-Math.random()*15}s;`;c.appendChild(b);}})();
+
+// ═══════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════
+function go(id){
+  document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  document.getElementById('place-actions').style.display=(id==='scr-place')?'block':'none';
+}
+
+let toastT=null;
+function toast(msg){
+  document.querySelectorAll('.toast').forEach(t=>t.remove());
+  const t=document.createElement('div');t.className='toast';t.textContent=msg;
+  document.body.appendChild(t);if(toastT)clearTimeout(toastT);toastT=setTimeout(()=>t.remove(),2500);
+}
+function waiting(show,msg='⏳ KUTILMOQDA...'){
+  document.getElementById('wait-msg').textContent=msg;
+  document.getElementById('waiting').classList.toggle('on',show);
+}
+
+// ═══════════════════════════════════════════════
+// GAME STATE
+// ═══════════════════════════════════════════════
+let mode=null,orient='h',curTurn=0,localP=0,placingP=0;
+let totalShots=[0,0];
+let boards=[],playerShips=[],shotGrids=[],atkRes=[];
+let botPri=[];
+let netReady=[false,false];
+let waitNetResult=false;
+let isHost=false;
+let roomCode='';
+
+function newBoard(){return Array.from({length:10},()=>Array.from({length:10},()=>({ship:null,hit:false})));}
+function newShots(){return Array.from({length:10},()=>Array(10).fill(false));}
+function newAR(){return{miss:new Set(),hit:new Set(),sunk:new Set()};}
+
+function genCode(){
+  let c='';for(let i=0;i<CODE_LEN;i++)c+=CODE_CHARS[Math.floor(Math.random()*CODE_CHARS.length)];
+  return c;
+}
+
+// ═══════════════════════════════════════════════
+// CODE DISPLAY + INPUT BUILDER
+// ═══════════════════════════════════════════════
+function buildCodeDisplay(elId,code){
+  const el=document.getElementById(elId);
+  el.innerHTML='';
+  for(const ch of code){
+    const d=document.createElement('div');d.className='code-char';d.textContent=ch;
+    el.appendChild(d);
+  }
+}
+
+function buildCodeInputs(elId, prefix){
+  const el=document.getElementById(elId);
+  el.innerHTML='';
+  const inputs=[];
+  for(let i=0;i<CODE_LEN;i++){
+    const inp=document.createElement('input');
+    inp.className='ci';inp.maxLength=1;inp.type='text';
+    inp.setAttribute('autocomplete','off');inp.setAttribute('autocorrect','off');
+    inp.setAttribute('spellcheck','false');
+    inp.dataset.idx=i;
+    inp.addEventListener('input',e=>{
+      let v=inp.value.toUpperCase().replace(/[^A-Z2-9]/g,'');
+      inp.value=v?v[v.length-1]:'';
+      if(inp.value) inp.classList.add('filled'); else inp.classList.remove('filled');
+      if(inp.value&&i<CODE_LEN-1) inputs[i+1].focus();
+    });
+    inp.addEventListener('keydown',e=>{
+      if(e.key==='Backspace'&&!inp.value&&i>0){inputs[i-1].focus();inputs[i-1].value='';inputs[i-1].classList.remove('filled');}
+      if(e.key==='Enter'){
+        const fn=prefix==='hs'?hsGuestConnect:olGuestConnect;fn();
+      }
+    });
+    el.appendChild(inp);inputs.push(inp);
+  }
+  return inputs;
+}
+
+function getCodeFromInputs(elId){
+  return Array.from(document.getElementById(elId).querySelectorAll('.ci')).map(i=>i.value.toUpperCase()).join('');
+}
+
+// ═══════════════════════════════════════════════
+// START GAME
+// ═══════════════════════════════════════════════
+function startGame(m){
+  mode=m;
+  boards=[newBoard(),newBoard()];
+  playerShips=[[],[]];
+  shotGrids=[newShots(),newShots()];
+  atkRes=[newAR(),newAR()];
+  totalShots=[0,0];
+  curTurn=0;localP=0;
+  netReady=[false,false];
+  waitNetResult=false;
+  botPri=[];selShip=0;
+
+  if(m==='hotspot'){
+    resetHSUI();go('scr-hotspot');
+  } else if(m==='online'){
+    checkInternet().then(ok=>{
+      if(!ok){toast('❌ Internet (WiFi) ga bog\'laning!');return;}
+      resetOLUI();go('scr-online');
+    });
+  } else {
+    showPlacement(0);
+  }
+}
+
+// ═══════════════════════════════════════════════
+// INTERNET CHECK
+// ═══════════════════════════════════════════════
+async function checkInternet(){
+  if(!navigator.onLine) return false;
+  try{
+    const r=await fetch('https://www.gstatic.com/generate_204',
+      {method:'HEAD',cache:'no-cache',mode:'no-cors',signal:AbortSignal.timeout(4000)});
+    return true;
+  }catch(e){return false;}
+}
+
+// ═══════════════════════════════════════════════
+// PEERJS LOADER
+// ═══════════════════════════════════════════════
+let peerJSReady=false;
+function loadPeerJS(){
+  return new Promise((res,rej)=>{
+    if(peerJSReady||window.Peer){peerJSReady=true;res();return;}
+    const s=document.createElement('script');
+    s.src='https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js';
+    s.onload=()=>{peerJSReady=true;res();};
+    s.onerror=()=>rej(new Error('PeerJS yuklanmadi'));
+    document.head.appendChild(s);
+  });
+}
+
+// ═══════════════════════════════════════════════
+// HOTSPOT MODE
+// ═══════════════════════════════════════════════
+let peerInst=null,peerConn=null;
+let hsInputs=[];
+
+function resetHSUI(){
+  document.getElementById('hs-role-select').style.display='block';
+  document.getElementById('hs-host').style.display='none';
+  document.getElementById('hs-guest').style.display='none';
+}
+
+function hsChooseRole(host){
+  isHost=host;localP=host?0:1;
+  document.getElementById('hs-role-select').style.display='none';
+  if(host){
+    document.getElementById('hs-host').style.display='block';
+    roomCode=genCode();
+    buildCodeDisplay('hs-code-display',roomCode);
+    initPeer(roomCode,true);
+  } else {
+    document.getElementById('hs-guest').style.display='block';
+    hsInputs=buildCodeInputs('hs-inputs','hs');
+    setTimeout(()=>{if(hsInputs[0])hsInputs[0].focus();},200);
+  }
+}
+
+function hsGuestConnect(){
+  const code=getCodeFromInputs('hs-inputs');
+  if(code.length!==CODE_LEN){toast('❌ 5 ta belgi kiriting!');return;}
+  roomCode=code;
+  const st=document.getElementById('hs-guest-status');
+  st.style.display='block';st.className='conn-status wait';st.textContent='⏳ Ulanilmoqda...';
+  initPeer(code,false);
+}
+
+// ═══════════════════════════════════════════════
+// ONLINE MODE
+// ═══════════════════════════════════════════════
+let olInputs=[];
+
+function resetOLUI(){
+  document.getElementById('ol-role-select').style.display='block';
+  document.getElementById('ol-host').style.display='none';
+  document.getElementById('ol-guest').style.display='none';
+}
+
+function olChooseRole(host){
+  isHost=host;localP=host?0:1;
+  document.getElementById('ol-role-select').style.display='none';
+  if(host){
+    document.getElementById('ol-host').style.display='block';
+    roomCode=genCode();
+    buildCodeDisplay('ol-code-display',roomCode);
+    initPeer(roomCode,true);
+  } else {
+    document.getElementById('ol-guest').style.display='block';
+    olInputs=buildCodeInputs('ol-inputs','ol');
+    setTimeout(()=>{if(olInputs[0])olInputs[0].focus();},200);
+  }
+}
+
+function olGuestConnect(){
+  const code=getCodeFromInputs('ol-inputs');
+  if(code.length!==CODE_LEN){toast('❌ 5 ta belgi kiriting!');return;}
+  roomCode=code;
+  const st=document.getElementById('ol-guest-status');
+  st.style.display='block';st.className='conn-status wait';st.textContent='⏳ Ulanilmoqda...';
+  initPeer(code,false);
+}
+
+// ═══════════════════════════════════════════════
+// PEERJS CORE
+// ═══════════════════════════════════════════════
+function initPeer(code, host){
+  loadPeerJS().then(()=>{
+    const peerId=PEER_PFX+code+(host?'-H':'-G');
+    if(peerInst){try{peerInst.destroy();}catch(e){}}
+    peerInst=new Peer(peerId,{
+      config:{iceServers:[
+        {urls:'stun:stun.l.google.com:19302'},
+        {urls:'stun:stun2.l.google.com:19302'},
+      ]},
+      debug:0
+    });
+    peerInst.on('open',()=>{
+      if(host){
+        setHostStatus('wait','⏳ Do\'st ulanishi kutilmoqda...');
+        peerInst.on('connection',conn=>{
+          // Only accept 1 connection
+          if(peerConn){conn.close();return;}
+          peerConn=conn;
+          setupConn(conn,true);
+        });
+      } else {
+        const hostId=PEER_PFX+code+'-H';
+        peerConn=peerInst.connect(hostId,{reliable:true,serialization:'json'});
+        setupConn(peerConn,false);
+      }
+    });
+    peerInst.on('error',e=>{
+      const msg='❌ '+(e.type==='peer-unavailable'?'Kod topilmadi! Tekshiring.':e.type==='network'?'Internet yo\'q!':e.message||'Xato');
+      if(host) setHostStatus('err',msg);
+      else setGuestStatus('err',msg);
+    });
+  }).catch(e=>{
+    toast('❌ Internet (WiFi) ga bog\'laning!');
+  });
+}
+
+function setHostStatus(type,msg){
+  const id=(mode==='hotspot')?'hs-host-status':'ol-host-status';
+  const el=document.getElementById(id);
+  if(el){el.className='conn-status '+type;el.textContent=msg;}
+}
+function setGuestStatus(type,msg){
+  const id=(mode==='hotspot')?'hs-guest-status':'ol-guest-status';
+  const el=document.getElementById(id);
+  if(el){el.style.display='block';el.className='conn-status '+type;el.textContent=msg;}
+}
+
+function setupConn(conn, asHost){
+  conn.on('open',()=>{
+    if(asHost) setHostStatus('ok','✅ Ulandi! O\'yin boshlanmoqda...');
+    else setGuestStatus('ok','✅ Ulandi! O\'yin boshlanmoqda...');
+    setTimeout(()=>showPlacement(localP),700);
+  });
+  conn.on('data',msg=>handleNetMsg(msg));
+  conn.on('close',()=>toast('⚠️ Raqib uzildi.'));
+  conn.on('error',e=>toast('❌ Ulanish xatosi.'));
+}
+
+function netSend(msg){
+  if(peerConn&&peerConn.open) peerConn.send(msg);
+}
+
+function cancelNet(){
+  if(peerInst){try{peerInst.destroy();}catch(e){}peerInst=null;peerConn=null;}
+  go('scr-mode');
+}
+
+// ═══════════════════════════════════════════════
+// PLACEMENT
+// ═══════════════════════════════════════════════
+let selShip=0, placeGrid=null;
+
+function showPlacement(p){
+  placingP=p;orient='h';selShip=0;
+  document.getElementById('place-title').innerHTML=(mode==='local'?`OYINCHI ${p+1}: `:'')+'KEMALARNI <em>JOYLASHTIR</em>';
+  document.getElementById('orient-btn').textContent='↔ GORIZONTAL';
+  document.getElementById('done-btn').disabled=true;
+  renderShipList();
+  placeGrid=buildGridUI('place-grid-wrap',placeAt);
+  refreshPlaceGrid();
+  go('scr-place');
+}
+
+function renderShipList(){
+  const el=document.getElementById('ship-list');el.innerHTML='';
+  SHIPS.forEach((s,i)=>{
+    const placed=playerShips[placingP].find(x=>x.id===s.id);
+    const d=document.createElement('div');
+    d.className='sitem'+((!placed&&i===selShip)?' sel':'')+(placed?' placed':'');
+    d.innerHTML=`${s.name} <small style="opacity:.6;">(${s.size})</small>`;
+    d.onclick=()=>{if(!placed){selShip=i;renderShipList();}};
+    el.appendChild(d);
+  });
+}
+
+function calcCS(){
+  return Math.max(24,Math.min(Math.floor((Math.min(window.innerWidth,400)-50)/10),36));
+}
+
+function buildGridUI(wrapId,clickFn){
+  const cs=calcCS();
+  const wrap=document.getElementById(wrapId);wrap.innerHTML='';
+  const cols=document.createElement('div');
+  cols.className='gcolrow';cols.style.marginLeft='20px';
+  COLS.forEach(c=>{const s=document.createElement('span');s.textContent=c;s.style.width=cs+'px';s.style.height=cs+'px';cols.appendChild(s);});
+  const rows=document.createElement('div');rows.className='growcol';
+  ROWS.forEach(r=>{const s=document.createElement('span');s.textContent=r;s.style.height=cs+'px';rows.appendChild(s);});
+  const g=document.createElement('div');g.className='grid';
+  g.style.cssText=`grid-template-columns:repeat(10,${cs}px);grid-template-rows:repeat(10,${cs}px);`;
+  for(let r=0;r<10;r++) for(let c=0;c<10;c++){
+    const cell=document.createElement('div');cell.className='cell';cell.dataset.r=r;cell.dataset.c=c;
+    // emoji font size via style
+    cell.style.fontSize=Math.floor(cs*.55)+'px';
+    g.appendChild(cell);
+  }
+  // Single delegated click
+  g.addEventListener('click',e=>{const cell=e.target.closest('[data-r]');if(cell&&clickFn)clickFn(+cell.dataset.r,+cell.dataset.c);});
+  // Touch - preventDefault to avoid ghost clicks
+  g.addEventListener('touchend',e=>{
+    e.preventDefault();
+    const t=e.changedTouches[0];
+    const el=document.elementFromPoint(t.clientX,t.clientY);
+    const cell=el&&el.closest('[data-r]');
+    if(cell&&clickFn)clickFn(+cell.dataset.r,+cell.dataset.c);
+  },{passive:false});
+  // Hover preview (desktop)
+  g.addEventListener('mousemove',e=>{const cell=e.target.closest('[data-r]');if(cell)showPreview(+cell.dataset.r,+cell.dataset.c,g);});
+  g.addEventListener('mouseleave',()=>clearPreview(g));
+  const rw=document.createElement('div');rw.style.display='flex';rw.appendChild(rows);rw.appendChild(g);
+  const outer=document.createElement('div');outer.className='grid-outer';outer.appendChild(cols);outer.appendChild(rw);
+  wrap.appendChild(outer);
+  return g;
+}
+
+function showPreview(hr,hc,g){
+  clearPreview(g);
+  if(selShip>=SHIPS.length)return;
+  const s=SHIPS[selShip];
+  if(playerShips[placingP].find(x=>x.id===s.id))return;
+  const cells=sCells(hr,hc,s.size,orient);
+  const valid=canPlace(cells,placingP);
+  const gc=g.querySelectorAll('[data-r]');
+  cells.forEach(([r,c])=>{if(r>=0&&r<10&&c>=0&&c<10)gc[r*10+c].classList.add(valid?'prev':'prev-bad');});
+}
+function clearPreview(g){if(g)g.querySelectorAll('.prev,.prev-bad').forEach(c=>{c.classList.remove('prev','prev-bad');});}
+
+function refreshPlaceGrid(){
+  if(!placeGrid)return;
+  const board=boards[placingP];
+  placeGrid.querySelectorAll('[data-r]').forEach(cell=>{
+    const r=+cell.dataset.r,c=+cell.dataset.c;
+    cell.className='cell'+(board[r][c].ship?' ship':'');
+  });
+}
+
+function sCells(r,c,size,dir){const a=[];for(let i=0;i<size;i++)a.push(dir==='h'?[r,c+i]:[r+i,c]);return a;}
+
+function canPlace(cells,p){
+  const b=boards[p];
+  for(const[r,c]of cells){
+    if(r<0||r>=10||c<0||c>=10)return false;
+    if(b[r][c].ship)return false;
+    for(let dr=-1;dr<=1;dr++) for(let dc=-1;dc<=1;dc++){const nr=r+dr,nc=c+dc;if(nr>=0&&nr<10&&nc>=0&&nc<10&&b[nr][nc].ship)return false;}
+  }
+  return true;
+}
+
+function placeAt(r,c){
+  if(selShip>=SHIPS.length)return;
+  const s=SHIPS[selShip];
+  if(playerShips[placingP].find(x=>x.id===s.id))return;
+  const cells=sCells(r,c,s.size,orient);
+  if(!canPlace(cells,placingP)){toast('❌ Bu yerga joylash mumkin emas!');return;}
+  cells.forEach(([rr,cc])=>{boards[placingP][rr][cc].ship=s.id;});
+  playerShips[placingP].push({id:s.id,cells,hits:0,sunk:false});
+  let next=-1;
+  for(let i=0;i<SHIPS.length;i++){if(!playerShips[placingP].find(x=>x.id===SHIPS[i].id)){next=i;break;}}
+  if(next>=0)selShip=next;
+  if(playerShips[placingP].length===SHIPS.length){document.getElementById('done-btn').disabled=false;toast('✅ Tayyor! TAYYOR tugmasini bosing.');}
+  renderShipList();refreshPlaceGrid();clearPreview(placeGrid);
+}
+
+function toggleOrient(){
+  orient=orient==='h'?'v':'h';
+  document.getElementById('orient-btn').textContent=orient==='h'?'↔ GORIZONTAL':'↕ VERTIKAL';
+}
+
+function clearBoard(){
+  boards[placingP]=newBoard();playerShips[placingP]=[];selShip=0;
+  document.getElementById('done-btn').disabled=true;
+  renderShipList();refreshPlaceGrid();
+}
+
+function autoPlaceUI(){
+  clearBoard();autoPlace(placingP);selShip=0;
+  document.getElementById('done-btn').disabled=false;
+  renderShipList();refreshPlaceGrid();toast('🎲 Avtomatik joylashtirildi!');
+}
+
+function autoPlace(p){
+  boards[p]=newBoard();playerShips[p]=[];
+  for(const s of SHIPS){
+    let ok=false;
+    for(let t=0;t<400&&!ok;t++){
+      const r=Math.floor(Math.random()*10),c=Math.floor(Math.random()*10),dir=Math.random()<.5?'h':'v';
+      const cells=sCells(r,c,s.size,dir);
+      if(canPlace(cells,p)){cells.forEach(([rr,cc])=>{boards[p][rr][cc].ship=s.id;});playerShips[p].push({id:s.id,cells,hits:0,sunk:false});ok=true;}
+    }
+  }
+}
+
+function donePlacement(){
+  if(playerShips[placingP].length<SHIPS.length){toast('Avval barcha kemalarni joylashtiring!');return;}
+  if(mode==='bot'){autoPlace(1);startBattle();}
+  else if(mode==='local'){
+    if(placingP===0) xfer('give-p2',()=>showPlacement(1));
+    else xfer('start-battle',()=>startBattle());
+  } else {
+    netReady[localP]=true;
+    netSend({type:'ready'});
+    if(netReady[1-localP]) startBattle();
+    else waiting(true,'⏳ Raqib kemalarini joylashtirmoqda...');
+  }
+}
+
+// ═══════════════════════════════════════════════
+// TRANSFER
+// ═══════════════════════════════════════════════
+function xfer(reason,cb){
+  const cfg={
+    'give-p2':{ico:'📱',t:'TELEFON BER',m:`<b style="color:var(--cy)">Oyinchi 2</b>ga telefon bering.<br>U o'z kemalarini joylashtirib oladi.`},
+    'start-battle':{ico:'⚔️',t:'JANG BOSHLAYDI!',m:`Ikkala o'yinchi tayyor!<br><b style="color:var(--gold)">Oyinchi 1</b> hujum boshlaydi.<br><small style="color:var(--txt2)">Telefon Oyinchi 1 qo'lida bo'lsin.</small>`},
+  };
+  const c=cfg[reason]||cfg['give-p2'];
+  document.getElementById('t-ico').textContent=c.ico;
+  document.getElementById('t-title').textContent=c.t;
+  document.getElementById('t-msg').innerHTML=c.m;
+  document.getElementById('t-btn').onclick=()=>cb&&cb();
+  go('scr-transfer');
+}
+
+function xferPass(pIdx,cb){
+  const n=`Oyinchi ${pIdx+1}`;
+  document.getElementById('t-ico').textContent='📱';
+  document.getElementById('t-title').textContent='TELEFON BER';
+  document.getElementById('t-msg').innerHTML=`<b style="color:var(--cy)">${n}</b>ga telefon bering.<br><small style="color:var(--txt2)">Tayyor bo'lgach bosing:</small>`;
+  document.getElementById('t-btn').onclick=()=>cb&&cb();
+  go('scr-transfer');
+}
+
+// ═══════════════════════════════════════════════
+// BATTLE
+// ═══════════════════════════════════════════════
+let atkG=null,defG=null;
+
+function startBattle(){
+  waiting(false);curTurn=0;
+  atkG=buildGridUI('battle-grid-wrap',fireAt);
+  defG=buildGridUI('defense-grid-wrap',null);
+  renderBattle();updateStatus();
+  go('scr-battle');
+  if(mode==='bot'&&curTurn===1) setTimeout(botShoot,900);
+}
+
+function renderBattle(){renderAtkG();renderDefG();}
+
+function getShootP(){return (mode==='hotspot'||mode==='online')?localP:curTurn;}
+
+function renderAtkG(){
+  if(!atkG)return;
+  const sp=getShootP();
+  const res=atkRes[sp];
+  atkG.querySelectorAll('[data-r]').forEach(cell=>{
+    const k=`${cell.dataset.r},${cell.dataset.c}`;
+    cell.className='cell';
+    if(res.sunk.has(k))cell.className='cell sunk';
+    else if(res.hit.has(k))cell.className='cell hit';
+    else if(res.miss.has(k))cell.className='cell miss';
+  });
+}
+
+function renderDefG(){
+  if(!defG)return;
+  const vP=(mode==='hotspot'||mode==='online')?localP:curTurn;
+  const board=boards[vP];
+  const incoming=shotGrids[1-vP];
+  defG.querySelectorAll('[data-r]').forEach(cell=>{
+    const r=+cell.dataset.r,c=+cell.dataset.c;
+    cell.className='cell';
+    if(board[r][c].ship){
+      const sunk=playerShips[vP].find(s=>s.id===board[r][c].ship&&s.sunk);
+      cell.className=board[r][c].hit?(sunk?'cell sunk':'cell hit'):'cell ship';
+    } else if(incoming[r][c]) cell.className='cell miss';
+  });
+}
+
+function showTab(t){
+  document.getElementById('btab-atk').classList.toggle('on',t==='atk');
+  document.getElementById('btab-def').classList.toggle('on',t==='def');
+  document.getElementById('view-atk').style.display=t==='atk'?'block':'none';
+  document.getElementById('view-def').style.display=t==='def'?'block':'none';
+}
+
+function fireAt(r,c){
+  if(mode==='bot'&&curTurn!==0)return;
+  if((mode==='hotspot'||mode==='online')&&(curTurn!==localP||waitNetResult)){
+    toast(waitNetResult?'⏳ Natija kutilmoqda...':'⏳ Raqib navbati!');return;
+  }
+  const sp=getShootP();
+  const k=`${r},${c}`;const res=atkRes[sp];
+  if(res.hit.has(k)||res.miss.has(k)||res.sunk.has(k)){toast('Bu katakka allaqachon otilgan!');return;}
+  if(mode==='hotspot'||mode==='online'){waitNetResult=true;netSend({type:'shot',r,c});updateStatus();}
+  else processShot(r,c,1-sp);
+}
+
+function processShot(r,c,targetP){
+  const shootP=1-targetP;
+  const board=boards[targetP];
+  const isHit=!!board[r][c].ship;
+  const k=`${r},${c}`;
+  shotGrids[shootP][r][c]=true;totalShots[shootP]++;
+  if(isHit){
+    board[r][c].hit=true;
+    const ship=playerShips[targetP].find(s=>s.id===board[r][c].ship);
+    if(ship){
+      ship.hits++;
+      if(ship.hits>=ship.cells.length){
+        ship.sunk=true;
+        ship.cells.forEach(([sr,sc])=>{
+          for(let dr=-1;dr<=1;dr++) for(let dc=-1;dc<=1;dc++){const nr=sr+dr,nc=sc+dc;if(nr>=0&&nr<10&&nc>=0&&nc<10&&!board[nr][nc].ship)shotGrids[shootP][nr][nc]=true;}
+        });
+        ship.cells.forEach(([sr,sc])=>{const k2=`${sr},${sc}`;atkRes[shootP].hit.delete(k2);atkRes[shootP].sunk.add(k2);});
+        atkRes[shootP].hit.delete(k);atkRes[shootP].sunk.add(k);
+        toast(`🔥 ${SHIPS.find(s=>s.id===ship.id).name} CHO'KTIRILDI!`);
+      } else {atkRes[shootP].hit.add(k);toast('💥 TEGDI! Yana otasiz!');}
+    }
+  } else {atkRes[shootP].miss.add(k);toast('💧 O\'tkazib yubordingiz.');}
+
+  const won=playerShips[targetP].every(s=>s.sunk);
+  if(won){renderBattle();updateStatus();setTimeout(()=>gameOver(shootP),700);return;}
+  if(!isHit)curTurn=1-curTurn;
+  if(mode==='local'&&!isHit){renderBattle();updateStatus();xferPass(curTurn,()=>{go('scr-battle');renderBattle();updateStatus();});return;}
+  if(mode==='bot'&&curTurn===1)setTimeout(botShoot,900);
+  renderBattle();updateStatus();
+}
+
+function updateStatus(){
+  const sp=getShootP();const tp=1-sp;
+  const rem=playerShips[tp].filter(s=>!s.sunk).length;
+  let tn='SENING',tc='var(--cy)';
+  if(mode==='bot'){tn=curTurn===0?'SENING':'BOTNING';tc=curTurn===0?'var(--cy)':'var(--red)';}
+  else if(mode==='local'){tn=`OYINCHI ${curTurn+1}`;tc=curTurn===0?'var(--cy)':'var(--gold)';}
+  else{const my=curTurn===localP;tn=my?'SENING':'RAQIBNING';tc=my?'var(--cy)':'var(--gold)';}
+  const tnEl=document.getElementById('turn-name');tnEl.textContent=tn;tnEl.style.color=tc;
+  document.getElementById('ships-left').textContent=rem+' ta';
+  const hp=document.getElementById('enemy-hp');hp.innerHTML='';
+  for(let i=0;i<SHIPS.length;i++){const d=document.createElement('div');d.className='hpdot'+(playerShips[tp][i]&&playerShips[tp][i].sunk?' dead':'');hp.appendChild(d);}
+  const bm=document.getElementById('b-msg');
+  if(mode==='hotspot'||mode==='online'){bm.textContent=waitNetResult?'⏳ Javob kutilmoqda...':(curTurn===localP?'Otish uchun katakni bosing':'⏳ Raqib o\'ylayapti...');}
+  else if(mode==='bot'){bm.textContent=curTurn===0?'Otish uchun katakni bosing':'Bot o\'ylayapti...';}
+  else bm.textContent=`Oyinchi ${curTurn+1} − bosing`;
+}
+
+// ═══════════════════════════════════════════════
+// BOT
+// ═══════════════════════════════════════════════
+function botShoot(){
+  if(mode!=='bot'||curTurn!==1)return;
+  const shots=shotGrids[1];
+  botPri=botPri.filter(([r,c])=>!shots[r][c]);
+  let r,c;
+  if(botPri.length){[r,c]=botPri.shift();}
+  else{
+    const a=[];for(let rr=0;rr<10;rr++) for(let cc=0;cc<10;cc++) if(!shots[rr][cc])a.push([rr,cc]);
+    if(!a.length)return;[r,c]=a[Math.floor(Math.random()*a.length)];
+  }
+  if(boards[0][r][c].ship){[[r-1,c],[r+1,c],[r,c-1],[r,c+1]].forEach(([nr,nc])=>{if(nr>=0&&nr<10&&nc>=0&&nc<10&&!shots[nr][nc]&&!botPri.some(([a,b])=>a===nr&&b===nc))botPri.unshift([nr,nc]);});}
+  processShot(r,c,0);
+}
+
+// ═══════════════════════════════════════════════
+// NETWORK MESSAGE HANDLER
+// ═══════════════════════════════════════════════
+function handleNetMsg(msg){
+  if(msg.type==='ready'){
+    netReady[1-localP]=true;
+    if(netReady[localP]) startBattle();
+    return;
+  }
+  if(msg.type==='shot'){
+    // Opponent shot at MY board
+    const{r,c}=msg;
+    const board=boards[localP];
+    const isHit=!!board[r][c].ship;
+    let sunkId=null,sunkCells=null,won=false;
+    if(isHit){
+      board[r][c].hit=true;
+      const ship=playerShips[localP].find(s=>s.id===board[r][c].ship);
+      if(ship){ship.hits++;if(ship.hits>=ship.cells.length){ship.sunk=true;sunkId=ship.id;sunkCells=ship.cells;}}
+      won=playerShips[localP].every(s=>s.sunk);
+    }
+    shotGrids[1-localP][r][c]=true;totalShots[1-localP]++;
+    netSend({type:'result',r,c,hit:isHit,sunkId,sunkCells,won});
+    renderDefG();
+    if(won){gameOver(1-localP);return;}
+    if(!isHit){curTurn=localP;updateStatus();}
+    return;
+  }
+  if(msg.type==='result'){
+    waitNetResult=false;
+    const{r,c,hit,sunkId,sunkCells,won}=msg;
+    const k=`${r},${c}`;
+    shotGrids[localP][r][c]=true;totalShots[localP]++;
+    if(sunkId&&sunkCells){
+      sunkCells.forEach(([sr,sc])=>{const k2=`${sr},${sc}`;atkRes[localP].hit.delete(k2);atkRes[localP].sunk.add(k2);});
+      atkRes[localP].hit.delete(k);atkRes[localP].sunk.add(k);
+      toast(`🔥 ${SHIPS.find(s=>s.id===sunkId).name} CHO'KTIRILDI!`);
+    } else if(hit){atkRes[localP].hit.add(k);toast('💥 TEGDI! Yana otasiz!');}
+    else{atkRes[localP].miss.add(k);toast('💧 O\'tkazib yubordingiz.');curTurn=1-localP;}
+    if(won){renderBattle();updateStatus();setTimeout(()=>gameOver(localP),700);return;}
+    renderBattle();updateStatus();
+  }
+}
+
+// ═══════════════════════════════════════════════
+// GAME OVER
+// ═══════════════════════════════════════════════
+function gameOver(winner){
+  const myShots=totalShots[localP]||totalShots[0];
+  const won=(mode==='hotspot'||mode==='online')?winner===localP:winner===0;
+  saveStats(mode==='bot'?winner===0:(mode==='local'?false:won),myShots);
+  let title='';
+  if(mode==='bot')title=winner===0?'🏆 SEN G\'ALABA QOZONDING!':'🤖 BOT G\'ALABA QOZONDI!';
+  else if(mode==='local')title=`🏆 OYINCHI ${winner+1} G\'ALABA QOZONDI!`;
+  else title=won?'🏆 SEN G\'ALABA QOZONDING!':'💀 RAQIB G\'ALABA QOZONDI!';
+  const cls=(mode==='bot')?winner===0?'p1':'p2':(mode==='local'?winner===0?'p1':'p2':won?'p1':'p2');
+  document.getElementById('go-ico').textContent=won||winner===0?'🏆':'💀';
+  const gt=document.getElementById('go-title');gt.textContent=title;gt.className='winner '+cls;
+  document.getElementById('go-stats').innerHTML=
+    `BARCHA KEMALAR CHO'KTIRILDI<br>Otishlar: ${totalShots[0]} vs ${totalShots[1]}<br>G'alabalar: ${profile.wins} | O'yinlar: ${profile.games}`;
+  go('scr-gameover');
+}
+
+function playAgain(){
+  if(mode==='hotspot'||mode==='online'){cancelNet();go('scr-mode');}
+  else startGame(mode);
+}
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+window.addEventListener('resize',()=>{
+  const a=document.querySelector('.scr.on');
+  if(!a)return;
+  if(a.id==='scr-place'&&placeGrid){placeGrid=buildGridUI('place-grid-wrap',placeAt);refreshPlaceGrid();}
+  if(a.id==='scr-battle'){
+    if(atkG)atkG=buildGridUI('battle-grid-wrap',fireAt);
+    if(defG)defG=buildGridUI('defense-grid-wrap',null);
+    renderBattle();
+  }
+});
+
+loadProfile();
+</script>
+</body>
+</html>
